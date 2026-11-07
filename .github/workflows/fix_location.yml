@@ -1,0 +1,59 @@
+name: Fix Locations
+
+# Run manually after a sync left activities without a location (e.g. the
+# geocoder rate-limited the first full sync). Fills them in at 1 request per
+# second, rebuilds activities.json from the database and republishes the site.
+on:
+  workflow_dispatch:
+
+jobs:
+  fix:
+    name: Fix locations
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: 'requirements.txt'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fill in missing locations
+        run: python run_page/fix_location.py --db run_page/data.db
+
+      - name: Rebuild activities.json from the database
+        run: |
+          python -c "
+          import json, sys
+          sys.path.insert(0, 'run_page')
+          from config import JSON_FILE, SQL_FILE
+          from generator import Generator
+          with open(JSON_FILE, 'w') as f:
+              json.dump(Generator(SQL_FILE).load(), f)
+          "
+
+      - name: Push changes
+        run: |
+          git config --local user.email 'action@github.com'
+          git config --local user.name 'GitHub Action'
+          git add run_page/data.db src/static/activities.json
+          git commit -m 'fix missing activity locations' || echo 'nothing to commit'
+          git push || echo 'nothing to push'
+
+  publish_github_pages:
+    needs: fix
+    name: Build and publish Github Pages
+    uses: ./.github/workflows/gh-pages.yml
+    with:
+      save_data_in_github_cache: false
+      data_cache_prefix: track_data

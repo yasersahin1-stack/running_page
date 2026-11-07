@@ -163,8 +163,10 @@ def fix_locations(session, dry_run=False, limit=None):
     query = session.query(Activity).filter(
         (Activity.location_country == "China")
         | (
-            (Activity.location_country.is_(None))
+            # failed geocodes during sync are stored as "" rather than NULL
+            (Activity.location_country.is_(None) | (Activity.location_country == ""))
             & (Activity.summary_polyline.isnot(None))
+            & (Activity.summary_polyline != "")
         )
     )
 
