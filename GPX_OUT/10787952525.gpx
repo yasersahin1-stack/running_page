@@ -1,0 +1,22 @@
+<gpx xmlns:ns3="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns2="http://www.garmin.com/xmlschemas/GpxExtensions/v3" creator="Garmin Connect" version="1.1" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/11.xsd">
+  <extensions>
+<distance>13020.88</distance>
+<average_hr>154.0</average_hr>
+<average_speed>3.578000068664551</average_speed>
+<start_time>2023-03-28T15:31:30+00:00</start_time>
+<end_time>2023-03-28T16:32:09.427000+00:00</end_time>
+<moving_time>3620.131</moving_time>
+<elapsed_time>3658.045</elapsed_time>
+</extensions>
+<metadata>
+    <link href="connect.garmin.com">
+      <text>Garmin Connect</text>
+    </link>
+    <time>2023-03-28T15:31:30.000Z</time>
+  </metadata>
+  <trk>
+    <name>Koşu Bandı Koşusu</name>
+    <type>treadmill_running</type>
+    <trkseg/>
+  </trk>
+</gpx>
